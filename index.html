@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 Lawn Treatment Schedule</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#111a11; --surface:#182018; --surface2:#1e2e1e;
+  --border:rgba(160,200,140,0.15); --border-bright:rgba(160,200,140,0.30);
+  --text:#ccdec4; --text-muted:#7a9870; --accent:#90b878; --accent-dim:rgba(144,184,120,0.12);
+  --c1:#8aba78; --c2:#6ea860; --c3:#52944a; --c4:#3a7a38;
+  --c5:#a8cc90; --c6:#c4d870; --c7:#b8a860; --c8:#c87848;
+  --c9:#7898b8; --c10:#b06060; --c11:#9080b8; --c12:#d4c050;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(160deg,#192619 0%,#111a11 60%);border-bottom:1px solid var(--border-bright);padding:36px 48px 32px;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 90% 50%,rgba(144,184,120,0.07) 0%,transparent 70%);pointer-events:none;}
+.header-inner{position:relative;z-index:1;display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.header-tag{display:inline-block;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:1px solid rgba(144,184,120,0.4);padding:4px 12px;border-radius:20px;margin-bottom:12px;}
+.header h1{font-family:'Playfair Display',serif;font-size:38px;font-weight:700;color:#d0e4c8;line-height:1.1;}
+.header h1 span{color:var(--accent);}
+.header-sub{margin-top:8px;font-size:13px;color:var(--text-muted);font-weight:300;}
+.header-stats{display:flex;gap:28px;margin-top:22px;flex-wrap:wrap;}
+.stat{display:flex;flex-direction:column;gap:2px;}
+.stat-num{font-family:'Playfair Display',serif;font-size:26px;color:var(--accent);line-height:1;}
+.stat-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.12em;}
+.stat-div{width:1px;background:var(--border-bright);align-self:stretch;margin:4px 0;}
+
+/* Progress */
+.progress-block{min-width:220px;display:flex;flex-direction:column;gap:8px;padding-top:6px;}
+.progress-top{display:flex;justify-content:space-between;align-items:baseline;}
+.progress-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);}
+.progress-count{font-family:'Playfair Display',serif;font-size:22px;color:var(--accent);}
+.progress-bar-wrap{background:rgba(144,184,120,0.12);border-radius:6px;height:8px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#3a7a38,#8aba78);transition:width .6s ease;}
+.progress-pct{font-size:11px;color:var(--text-muted);text-align:right;}
+
+/* ── SECTION ── */
+.main{padding:32px 48px 60px;display:flex;flex-direction:column;gap:40px;}
+.section-head{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.section-head h2{font-family:'Playfair Display',serif;font-size:19px;font-weight:600;color:#b8d4ac;white-space:nowrap;}
+.section-head .line{flex:1;height:1px;background:var(--border);}
+.section-hint{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+.section-action{font-size:11px;color:var(--text-muted);cursor:pointer;white-space:nowrap;padding:4px 10px;border:1px solid var(--border);border-radius:5px;background:none;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.section-action:hover{color:var(--accent);border-color:var(--border-bright);}
+
+/* ── THIS WEEK ── */
+.this-week{background:linear-gradient(135deg,#182618 0%,#1a2e1a 100%);border-bottom:1px solid var(--border-bright);padding:28px 48px 32px;}
+.week-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
+.week-eyebrow{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:5px;}
+.week-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;color:#b8d4ac;}
+.week-range{font-size:12px;color:var(--text-muted);margin-top:3px;}
+.week-top-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.week-pill{font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.05em;white-space:nowrap;}
+.week-pill.busy{background:rgba(138,186,120,0.2);color:#8aba78;border:1px solid rgba(138,186,120,0.3);}
+.week-pill.light{background:rgba(138,186,120,0.1);color:#7a9870;border:1px solid rgba(138,186,120,0.2);}
+.week-pill.clear{background:rgba(100,120,100,0.12);color:#5a7855;border:1px solid rgba(100,120,100,0.2);}
+.print-btn{font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;border:1px solid var(--border-bright);background:none;color:var(--text-muted);cursor:pointer;letter-spacing:.05em;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.print-btn:hover{color:var(--accent);border-color:var(--accent);}
+
+.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;}
+.week-col{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s;}
+.week-col.is-today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(144,184,120,0.15);}
+.week-col.has-tasks{border-color:var(--border-bright);}
+.wc-head{padding:9px 10px 7px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:1px;}
+.week-col.is-today .wc-head{background:rgba(144,184,120,0.07);}
+.wc-day-row{display:flex;align-items:baseline;gap:5px;}
+.wc-name{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
+.wc-num{font-family:'Playfair Display',serif;font-size:17px;color:var(--text-muted);line-height:1;}
+.week-col.is-today .wc-name,.week-col.is-today .wc-num{color:var(--accent);}
+.wc-weather{display:flex;align-items:center;gap:4px;margin-top:4px;flex-wrap:wrap;}
+.wc-icon{font-size:13px;line-height:1;}
+.wc-temps{font-size:10px;color:var(--text-muted);}
+.wc-rain{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:600;}
+.wc-rain.ok{background:rgba(138,186,120,0.15);color:#7ab868;}
+.wc-rain.warn{background:rgba(200,168,96,0.2);color:#c8a858;}
+.wc-rain.bad{background:rgba(176,96,96,0.2);color:#b07070;}
+.wc-spray{height:2px;border-radius:1px;margin-top:5px;}
+.wc-spray.good{background:linear-gradient(90deg,#52944a,#8aba78);}
+.wc-spray.caution{background:linear-gradient(90deg,#b8a060,#d4c070);}
+.wc-spray.hold{background:rgba(176,96,96,0.5);}
+
+.week-tasks{padding:7px 6px;display:flex;flex-direction:column;gap:5px;flex:1;}
+.week-task{background:rgba(255,255,255,0.03);border-radius:6px;padding:5px 7px;display:flex;flex-direction:column;gap:3px;}
+.wt-top{display:flex;align-items:center;gap:6px;}
+.wt-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+.wt-name{font-size:10px;font-weight:600;color:#a8c898;line-height:1.2;flex:1;}
+.wt-bottom{display:flex;align-items:center;justify-content:space-between;padding-left:13px;}
+.wt-setting{font-size:9px;color:var(--text-muted);}
+.log-btn{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;border:none;cursor:pointer;letter-spacing:.04em;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.log-btn.undone{background:rgba(144,184,120,0.15);color:#7ab868;}
+.log-btn.undone:hover{background:rgba(144,184,120,0.3);}
+.log-btn.done{background:rgba(82,148,74,0.25);color:#6ea860;}
+.week-empty{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 8px;}
+.week-empty-text{font-size:10px;color:#3a5038;font-style:italic;text-align:center;}
+
+.week-upcoming{margin-top:14px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.upcoming-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);white-space:nowrap;}
+.upcoming-items{display:flex;gap:8px;flex-wrap:wrap;flex:1;}
+.upcoming-chip{display:flex;align-items:center;gap:5px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:6px;padding:4px 9px;}
+.chip-dot{width:6px;height:6px;border-radius:2px;flex-shrink:0;}
+.chip-name{font-size:10px;color:#a8c898;font-weight:500;}
+.chip-date{font-size:10px;color:var(--text-muted);margin-left:2px;}
+
+/* ── PRODUCT CARDS ── */
+.product-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:13px 15px;display:flex;align-items:flex-start;gap:11px;cursor:pointer;transition:all .2s;user-select:none;}
+.product-card:hover{border-color:var(--border-bright);}
+.product-card.active{border-color:var(--accent);background:rgba(144,184,120,0.07);box-shadow:0 0 0 1px rgba(144,184,120,0.1);}
+.pd-dot{width:31px;height:31px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#fff;flex-shrink:0;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+.pd-info{flex:1;min-width:0;}
+.pd-name{font-size:12px;font-weight:600;color:#b8d4ac;}
+.pd-meta{font-size:10px;color:var(--text-muted);margin-top:3px;}
+.pd-meta span{margin-right:10px;}
+.pd-cat{display:inline-block;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:2px 6px;border-radius:4px;margin-top:4px;}
+
+/* ── GANTT ── */
+.gantt-wrap{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.gantt-months-header{display:grid;grid-template-columns:190px repeat(12,1fr);background:var(--surface2);border-bottom:1px solid var(--border-bright);}
+.gantt-lbl-head{padding:9px 14px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);border-right:1px solid var(--border);}
+.gantt-mo-head{padding:9px 0;text-align:center;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);border-right:1px solid var(--border);}
+.gantt-mo-head:last-child{border-right:none;}
+.gantt-row{display:grid;grid-template-columns:190px repeat(12,1fr);border-bottom:1px solid var(--border);transition:background .15s;}
+.gantt-row:last-child{border-bottom:none;}
+.gantt-row.highlighted{background:rgba(144,184,120,0.06);}
+.gantt-prod-lbl{padding:8px 14px;display:flex;align-items:center;gap:7px;border-right:1px solid var(--border-bright);cursor:pointer;}
+.gantt-prod-lbl:hover .gantt-prod-name{color:var(--accent);}
+.gantt-g-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
+.gantt-prod-name{font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .15s;}
+.gantt-cell{border-right:1px solid var(--border);padding:5px 3px;display:flex;align-items:center;justify-content:center;}
+.gantt-cell:last-child{border-right:none;}
+.gantt-bar{width:100%;height:18px;border-radius:4px;opacity:.8;transition:opacity .15s;}
+.gantt-row:hover .gantt-bar,.gantt-row.highlighted .gantt-bar{opacity:1;}
+
+/* ── CALENDAR ── */
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+.cal-month{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.cal-month.current{border-color:var(--border-bright);}
+.cal-mo-head{background:var(--surface2);padding:9px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.cal-mo-name{font-family:'Playfair Display',serif;font-size:13px;font-weight:600;color:#b8d4ac;transition:color .2s;}
+.cal-month.current .cal-mo-name{color:var(--accent);}
+.cal-mo-head:hover .cal-mo-name{color:var(--accent);}
+.cal-arrow{font-size:10px;color:var(--text-muted);transition:transform .2s;display:inline-block;}
+.cal-month.open .cal-arrow{transform:rotate(180deg);}
+.cal-mo-body{display:none;padding:9px 11px;}
+.cal-month.open .cal-mo-body{display:block;}
+.cal-dl-row{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:3px;}
+.cal-dl{text-align:center;font-size:8px;font-weight:600;color:var(--text-muted);letter-spacing:.08em;text-transform:uppercase;}
+.cal-days-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+.cal-day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:2px 1px;border-radius:4px;min-height:22px;}
+.cal-day.has-ev{background:rgba(144,184,120,0.07);}
+.cal-day.today{background:rgba(144,184,120,0.18);}
+.cal-day-num{font-size:8px;color:var(--text-muted);line-height:1;margin-bottom:1px;}
+.cal-day.has-ev .cal-day-num{color:#a8cc90;font-weight:600;}
+.cal-day.today .cal-day-num{color:var(--accent);font-weight:700;}
+.ev-dots{display:flex;flex-wrap:wrap;gap:1px;justify-content:center;}
+.ev-dot{width:4px;height:4px;border-radius:1px;}
+.no-events{padding:14px;text-align:center;font-size:11px;color:var(--text-muted);font-style:italic;}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:18px;font-size:11px;color:#4a6845;border-top:1px solid var(--border);letter-spacing:.05em;}
+
+/* ── PRINT ── */
+@media print {
+  .header,.main,.footer{display:none !important;}
+  .this-week{border:none !important;padding:12px !important;}
+  body{background:#fff;color:#000;}
+  .week-col{border:1px solid #ccc !important;background:#fff !important;}
+  .week-col.is-today{border:2px solid #3a7a38 !important;}
+  .wc-name,.wc-num,.wt-name{color:#222 !important;}
+  .week-empty-text,.wt-setting{color:#888 !important;}
+  .log-btn,.print-btn,.week-upcoming{display:none !important;}
+  .week-eyebrow,.week-title,.week-range,.week-pill{color:#333 !important;}
+  .wc-temps{color:#555 !important;}
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width:960px) {
+  .header,.this-week,.main{padding-left:20px;padding-right:20px;}
+  .header h1{font-size:28px;}
+  .header-inner{flex-direction:column;}
+  .progress-block{width:100%;min-width:unset;}
+  .product-grid{grid-template-columns:repeat(2,1fr);}
+  .cal-grid{grid-template-columns:repeat(2,1fr);}
+  .gantt-wrap{overflow-x:auto;}
+  .gantt-months-header,.gantt-row{min-width:680px;}
+}
+@media (max-width:600px) {
+  .week-grid{grid-template-columns:repeat(7,minmax(90px,1fr));overflow-x:auto;}
+  .product-grid{grid-template-columns:1fr;}
+  .cal-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-tag">Annual Program</div>
+      <h1>2026 Lawn <span>&amp; Soil</span> Treatment Schedule</h1>
+      <p class="header-sub">Full-year fertilizer, amendment &amp; pest-control calendar &nbsp;·&nbsp; 5,000 sq ft</p>
+      <div class="header-stats">
+        <div class="stat"><div class="stat-num">12</div><div class="stat-label">Products</div></div>
+        <div class="stat-div"></div>
+        <div class="stat"><div class="stat-num">10</div><div class="stat-label">Active Months</div></div>
+        <div class="stat-div"></div>
+        <div class="stat"><div class="stat-num">49</div><div class="stat-label">Total Applications</div></div>
+      </div>
+    </div>
+    <div class="progress-block">
+      <div class="progress-top">
+        <span class="progress-label">Season Progress</span>
+        <span class="progress-count" id="progCount">0 / 49</span>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progFill" style="width:0%"></div></div>
+      <div class="progress-pct" id="progPct">0% complete</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ THIS WEEK ═══ -->
+<div class="this-week">
+  <div class="week-top">
+    <div>
+      <div class="week-eyebrow">🌿 This Week's Schedule</div>
+      <div class="week-title" id="weekTitle">Loading…</div>
+      <div class="week-range" id="weekRange"></div>
+    </div>
+    <div class="week-top-right">
+      <div class="week-pill clear" id="weekPill">—</div>
+      <button class="print-btn" onclick="window.print()">🖨 Print Week</button>
+    </div>
+  </div>
+  <div class="week-grid" id="weekGrid"></div>
+  <div class="week-upcoming">
+    <div class="upcoming-label">Coming up →</div>
+    <div class="upcoming-items" id="upcomingItems"></div>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- Products -->
+  <div>
+    <div class="section-head">
+      <h2>Product Reference</h2>
+      <div class="line"></div>
+      <span class="section-hint">Click a card to highlight its schedule below</span>
+    </div>
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
+  <!-- Gantt -->
+  <div>
+    <div class="section-head"><h2>Annual Application Timeline</h2><div class="line"></div></div>
+    <div class="gantt-wrap">
+      <div class="gantt-months-header">
+        <div class="gantt-lbl-head">Product</div>
+        <div class="gantt-mo-head">Jan</div><div class="gantt-mo-head">Feb</div>
+        <div class="gantt-mo-head">Mar</div><div class="gantt-mo-head">Apr</div>
+        <div class="gantt-mo-head">May</div><div class="gantt-mo-head">Jun</div>
+        <div class="gantt-mo-head">Jul</div><div class="gantt-mo-head">Aug</div>
+        <div class="gantt-mo-head">Sep</div><div class="gantt-mo-head">Oct</div>
+        <div class="gantt-mo-head">Nov</div><div class="gantt-mo-head">Dec</div>
+      </div>
+      <div id="ganttBody"></div>
+    </div>
+  </div>
+
+  <!-- Calendar -->
+  <div>
+    <div class="section-head">
+      <h2>Monthly Application Dates</h2>
+      <div class="line"></div>
+      <button class="section-action" id="calToggleBtn" onclick="toggleAllMonths()">Collapse All</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+</div>
+
+<div class="footer">2026 Lawn &amp; Soil Treatment Program · Log each application to track your season progress</div>
+
+<script>
+// ═══════ DATA ═══════
+const TOTAL = 49;
+
+const products = {
+  1:  {name:'IFA Stage 1',      months:[2,3],              apps:2,  setting:'4',     type:'Fertilizer',     color:'#8aba78', bg:'rgba(138,186,120,0.18)'},
+  2:  {name:'IFA Stage 2',      months:[4,5],              apps:2,  setting:'4',     type:'Fertilizer',     color:'#6ea860', bg:'rgba(110,168,96,0.18)'},
+  3:  {name:'IFA Stage 3',      months:[6,7,8],            apps:3,  setting:'4',     type:'Fertilizer',     color:'#52944a', bg:'rgba(82,148,74,0.18)'},
+  4:  {name:'IFA Stage 4',      months:[9,10,11],          apps:3,  setting:'4',     type:'Fertilizer',     color:'#3a7a38', bg:'rgba(58,122,56,0.18)'},
+  5:  {name:'IFA Humate',       months:[2,3,4,5,6,7,8,9,10,11], apps:12, setting:'4', type:'Soil Amendment',color:'#a8cc90', bg:'rgba(168,204,144,0.18)'},
+  6:  {name:'UREA N2 46-0-0',   months:[4,5,6,7,8,9,10],  apps:7,  setting:'4',     type:'Nitrogen',       color:'#c4d870', bg:'rgba(196,216,112,0.15)'},
+  7:  {name:'Calcium Sulfate',  months:[3,4,10],           apps:3,  setting:'4',     type:'Mineral',        color:'#b8a860', bg:'rgba(184,168,96,0.18)'},
+  8:  {name:'Grub X',           months:[4,5],              apps:2,  setting:'2',     type:'Grub Control',   color:'#c87848', bg:'rgba(200,120,72,0.18)'},
+  9:  {name:'Disease X',        months:[4,5,6,7],          apps:4,  setting:'2',     type:'Disease Control',color:'#7898b8', bg:'rgba(120,152,184,0.18)'},
+  10: {name:'Cinch Bug Spray',  months:[5,6,7,9],          apps:4,  setting:'Spray', type:'Insect Control', color:'#b06060', bg:'rgba(176,96,96,0.18)'},
+  11: {name:'Mosquito Spray',   months:[5,6,7,8,9,10],     apps:7,  setting:'Spray', type:'Insect Control', color:'#9080b8', bg:'rgba(144,128,184,0.18)'},
+  12: {name:'Crab Grass Spray', months:[5,9],              apps:2,  setting:'Spray', type:'Weed Control',   color:'#d4c050', bg:'rgba(212,192,80,0.15)'}
+};
+
+const events = {
+  2:  {18:[1,5]},
+  3:  {18:[1,5,7]},
+  4:  {15:[2,5,6], 22:[7,8,9]},
+  5:  {6:[2,5,6], 13:[8,9], 20:[10,11], 27:[12]},
+  6:  {3:[3,5], 6:[11], 10:[10], 17:[5,6], 24:[9]},
+  7:  {1:[3,5], 3:[11], 8:[10], 15:[5,6], 22:[9], 31:[11]},
+  8:  {5:[3,5], 19:[5,6], 28:[11]},
+  9:  {2:[10,12], 9:[4,5], 18:[11]},
+  10: {7:[4,5], 23:[11]},
+  11: {11:[4,5]}
+};
+
+const MO  = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MOS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DS  = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const DL  = ['S','M','T','W','T','F','S'];
+const CAL_DATA = [
+  {m:1,days:31,start:4},{m:2,days:29,start:0},{m:3,days:31,start:0},
+  {m:4,days:30,start:3},{m:5,days:31,start:5},{m:6,days:30,start:1},
+  {m:7,days:31,start:3},{m:8,days:31,start:6},{m:9,days:30,start:2},
+  {m:10,days:31,start:4},{m:11,days:30,start:0},{m:12,days:31,start:2}
+];
+
+// ═══════ LOCAL STORAGE ═══════
+function logKey(m,d,c){return `${m}-${d}-${c}`;}
+function getLogged(){
+  try{return new Set(JSON.parse(localStorage.getItem('lawn2026')||'[]'));}
+  catch{return new Set();}
+}
+function saveLogged(s){
+  try{localStorage.setItem('lawn2026',JSON.stringify([...s]));}catch{}
+}
+function toggleLog(m,d,code){
+  const s=getLogged(), k=logKey(m,d,code);
+  s.has(k)?s.delete(k):s.add(k);
+  saveLogged(s);
+  updateProgress();
+  refreshLogBtns();
+}
+function refreshLogBtns(){
+  const s=getLogged();
+  document.querySelectorAll('.log-btn[data-k]').forEach(btn=>{
+    const logged=s.has(btn.dataset.k);
+    btn.textContent=logged?'✓ Done':'Log it';
+    btn.className='log-btn '+(logged?'done':'undone');
+  });
+}
+function updateProgress(){
+  const done=getLogged().size, pct=Math.round(done/TOTAL*100);
+  document.getElementById('progCount').textContent=`${done} / ${TOTAL}`;
+  document.getElementById('progFill').style.width=`${pct}%`;
+  document.getElementById('progPct').textContent=`${pct}% complete`;
+}
+
+// ═══════ WEATHER ═══════
+const WX={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',
+  61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',75:'❄️',77:'❄️',80:'🌦',81:'🌧',
+  82:'⛈',85:'🌨',86:'❄️',95:'⛈',96:'⛈',99:'⛈'};
+
+function wxIcon(c){return WX[c]??'🌡';}
+function sprayAdvice(code,high,rain){
+  if(high<40||[71,73,75,77,85,86].includes(code))return'hold';
+  if(rain>40||[55,61,63,65,80,81,82,95,96,99].includes(code))return'hold';
+  if(rain>20||high>88)return'caution';
+  return'good';
+}
+function dateStr(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+
+let wxData=null;
+async function fetchWeather(){
+  try{
+    const r=await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.7608&longitude=-111.891'
+      +'&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode'
+      +'&forecast_days=7&temperature_unit=fahrenheit&timezone=America%2FDenver');
+    wxData=await r.json();
+  }catch{}
+  buildWeekSection(); // rebuild with weather data
+}
+function getWx(d){
+  if(!wxData?.daily?.time)return null;
+  const i=wxData.daily.time.indexOf(dateStr(d));
+  if(i===-1)return null;
+  return{
+    icon:wxIcon(wxData.daily.weathercode[i]),
+    high:Math.round(wxData.daily.temperature_2m_max[i]),
+    low:Math.round(wxData.daily.temperature_2m_min[i]),
+    rain:wxData.daily.precipitation_probability_max[i],
+    code:wxData.daily.weathercode[i]
+  };
+}
+
+// ═══════ THIS WEEK ═══════
+function buildWeekSection(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const sunday=new Date(today); sunday.setDate(today.getDate()-today.getDay());
+  const saturday=new Date(sunday); saturday.setDate(sunday.getDate()+6);
+
+  document.getElementById('weekTitle').textContent=`Week of ${MO[sunday.getMonth()]} ${sunday.getDate()}`;
+  document.getElementById('weekRange').textContent=
+    `${MOS[sunday.getMonth()]} ${sunday.getDate()} – ${MOS[saturday.getMonth()]} ${saturday.getDate()}, ${saturday.getFullYear()}`;
+
+  const grid=document.getElementById('weekGrid'); grid.innerHTML='';
+  let taskDays=0;
+
+  for(let i=0;i<7;i++){
+    const day=new Date(sunday); day.setDate(sunday.getDate()+i);
+    const isToday=day.getTime()===today.getTime();
+    const m=day.getMonth()+1, d=day.getDate();
+    const tasks=(events[m]&&events[m][d])||[];
+    if(tasks.length)taskDays++;
+
+    const wx=getWx(day);
+    const advice=wx?sprayAdvice(wx.code,wx.high,wx.rain):null;
+
+    const col=document.createElement('div');
+    col.className='week-col'+(isToday?' is-today':'')+(tasks.length?' has-tasks':'');
+
+    // Head
+    let headHtml=`<div class="wc-day-row"><span class="wc-name">${DS[day.getDay()]}</span><span class="wc-num">${d}</span></div>`;
+    if(wx){
+      const rc=wx.rain>40?'bad':wx.rain>20?'warn':'ok';
+      headHtml+=`<div class="wc-weather"><span class="wc-icon">${wx.icon}</span><span class="wc-temps">${wx.high}°/${wx.low}°</span><span class="wc-rain ${rc}">${wx.rain}%</span></div><div class="wc-spray ${advice}" title="${{good:'Good to apply',caution:'Apply early AM – heat or rain possible',hold:'Hold off – poor conditions'}[advice]}"></div>`;
+    }
+    col.innerHTML=`<div class="wc-head">${headHtml}</div>`;
+
+    if(tasks.length){
+      const wrap=document.createElement('div'); wrap.className='week-tasks';
+      tasks.forEach(code=>{
+        const p=products[code], k=logKey(m,d,code), logged=getLogged().has(k);
+        const t=document.createElement('div'); t.className='week-task';
+        t.innerHTML=`<div class="wt-top"><div class="wt-dot" style="background:${p.color}"></div><div class="wt-name">${p.name}</div></div>
+          <div class="wt-bottom"><span class="wt-setting">⚙ ${p.setting}</span>
+          <button class="log-btn ${logged?'done':'undone'}" data-k="${k}" onclick="toggleLog(${m},${d},${code})">${logged?'✓ Done':'Log it'}</button></div>`;
+        wrap.appendChild(t);
+      });
+      col.appendChild(wrap);
+    } else {
+      col.innerHTML+=`<div class="week-empty"><div class="week-empty-text">${isToday?'Rest day 🌱':'—'}</div></div>`;
+    }
+    grid.appendChild(col);
+  }
+
+  // Pill
+  const pill=document.getElementById('weekPill');
+  if(taskDays>=3){pill.textContent=`${taskDays} application days`;pill.className='week-pill busy';}
+  else if(taskDays>0){pill.textContent=`${taskDays} application day${taskDays>1?'s':''}`;pill.className='week-pill light';}
+  else{pill.textContent='Clear week';pill.className='week-pill clear';}
+
+  // Upcoming
+  const items=document.getElementById('upcomingItems'); items.innerHTML='';
+  let found=0;
+  for(let i=1;i<=90&&found<6;i++){
+    const d=new Date(saturday); d.setDate(d.getDate()+i);
+    const m=d.getMonth()+1, day=d.getDate();
+    const t=events[m]&&events[m][day];
+    if(t&&t.length){
+      found++;
+      t.forEach(code=>{
+        const p=products[code];
+        const chip=document.createElement('div'); chip.className='upcoming-chip';
+        chip.innerHTML=`<div class="chip-dot" style="background:${p.color}"></div><span class="chip-name">${p.name}</span><span class="chip-date">${MOS[d.getMonth()]} ${day}</span>`;
+        items.appendChild(chip);
+      });
+    }
+  }
+  if(!found) items.innerHTML='<span style="font-size:12px;color:#4a6845;font-style:italic">Nothing scheduled in the next 90 days</span>';
+}
+
+// ═══════ PRODUCT CARDS ═══════
+let activeId=null;
+function buildProductCards(){
+  const grid=document.getElementById('productGrid');
+  Object.entries(products).forEach(([id,p])=>{
+    const months=p.months.map(m=>MOS[m-1]).join(', ');
+    const card=document.createElement('div');
+    card.className='product-card'; card.id=`pc${id}`;
+    card.onclick=()=>highlightProduct(+id);
+    card.innerHTML=`<div class="pd-dot" style="background:${p.color}">${id}</div>
+      <div class="pd-info">
+        <div class="pd-name">${p.name}</div>
+        <div class="pd-meta"><span>📅 ${months}</span><span>⚙ ${p.setting}</span><span>×${p.apps}</span></div>
+        <span class="pd-cat" style="background:${p.bg};color:${p.color}">${p.type}</span>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+function highlightProduct(id){
+  if(activeId===id){
+    activeId=null;
+    document.querySelectorAll('.product-card').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('.gantt-row').forEach(r=>r.classList.remove('highlighted'));
+  } else {
+    activeId=id;
+    document.querySelectorAll('.product-card').forEach(c=>c.classList.toggle('active',c.id===`pc${id}`));
+    document.querySelectorAll('.gantt-row').forEach(r=>r.classList.toggle('highlighted',r.dataset.pid===String(id)));
+    document.getElementById(`gr${id}`)?.scrollIntoView({behavior:'smooth',block:'nearest'});
+  }
+}
+
+// ═══════ GANTT ═══════
+function buildGantt(){
+  const body=document.getElementById('ganttBody');
+  Object.entries(products).forEach(([id,p])=>{
+    const row=document.createElement('div');
+    row.className='gantt-row'; row.id=`gr${id}`; row.dataset.pid=id;
+    let html=`<div class="gantt-prod-lbl" onclick="highlightProduct(${id})"><div class="gantt-g-dot" style="background:${p.color}"></div><span class="gantt-prod-name">${id} · ${p.name}</span></div>`;
+    for(let m=1;m<=12;m++){
+      html+=`<div class="gantt-cell">${p.months.includes(m)?`<div class="gantt-bar" style="background:${p.color}"></div>`:''}</div>`;
+    }
+    row.innerHTML=html;
+    body.appendChild(row);
+  });
+}
+
+// ═══════ CALENDAR ═══════
+function buildCalendar(){
+  const today=new Date(); today.setHours(0,0,0,0);
+  const curM=today.getMonth()+1;
+  const grid=document.getElementById('calGrid'); grid.innerHTML='';
+
+  CAL_DATA.forEach(({m,days,start})=>{
+    const isCurrent=m===curM, hasEv=!!events[m];
+    const card=document.createElement('div');
+    card.className='cal-month'+(isCurrent?' current':'')+(isCurrent||hasEv?' open':'');
+    card.id=`cm${m}`;
+
+    const head=document.createElement('div');
+    head.className='cal-mo-head'; head.onclick=()=>toggleMonth(m);
+    head.innerHTML=`<span class="cal-mo-name">${MO[m-1]}</span><span class="cal-arrow">▾</span>`;
+    card.appendChild(head);
+
+    const body=document.createElement('div'); body.className='cal-mo-body';
+    if(hasEv||isCurrent){
+      let dlHtml='<div class="cal-dl-row">'; DL.forEach(l=>dlHtml+=`<div class="cal-dl">${l}</div>`); dlHtml+='</div>';
+      let daysHtml='<div class="cal-days-grid">';
+      for(let i=0;i<start;i++) daysHtml+=`<div class="cal-day"></div>`;
+      for(let d=1;d<=days;d++){
+        const isToday=today.getFullYear()===2026&&m===curM&&d===today.getDate();
+        const dayTasks=events[m]&&events[m][d];
+        let cls='cal-day'+(isToday?' today':'')+(dayTasks?' has-ev':'');
+        let inner=`<div class="cal-day-num">${d}</div>`;
+        if(dayTasks){
+          inner+='<div class="ev-dots">';
+          dayTasks.forEach(c=>inner+=`<div class="ev-dot" style="background:${products[c].color}"></div>`);
+          inner+='</div>';
+        }
+        daysHtml+=`<div class="${cls}">${inner}</div>`;
+      }
+      daysHtml+='</div>';
+      body.innerHTML=dlHtml+daysHtml;
+    } else {
+      body.innerHTML='<div class="no-events">No applications</div>';
+    }
+    card.appendChild(body);
+    grid.appendChild(card);
+  });
+  updateCalToggleLabel();
+}
+function toggleMonth(m){
+  document.getElementById(`cm${m}`)?.classList.toggle('open');
+  updateCalToggleLabel();
+}
+function toggleAllMonths(){
+  const all=document.querySelectorAll('.cal-month');
+  const anyOpen=[...all].some(el=>el.classList.contains('open'));
+  all.forEach(el=>anyOpen?el.classList.remove('open'):el.classList.add('open'));
+  updateCalToggleLabel();
+}
+function updateCalToggleLabel(){
+  const anyOpen=[...document.querySelectorAll('.cal-month')].some(el=>el.classList.contains('open'));
+  const btn=document.getElementById('calToggleBtn');
+  if(btn) btn.textContent=anyOpen?'Collapse All':'Expand All';
+}
+
+// ═══════ INIT ═══════
+buildProductCards();
+buildGantt();
+buildWeekSection();
+buildCalendar();
+updateProgress();
+fetchWeather(); // async – rebuilds week grid once weather loads
+</script>
+</body>
+</html>
