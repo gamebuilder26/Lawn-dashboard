@@ -63,41 +63,21 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
 .print-btn{font-size:11px;font-weight:600;padding:5px 13px;border-radius:20px;border:1px solid var(--border-bright);background:none;color:var(--text-muted);cursor:pointer;letter-spacing:.05em;font-family:'DM Sans',sans-serif;transition:all .2s;}
 .print-btn:hover{color:var(--accent);border-color:var(--accent);}
 
-.week-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:7px;}
-.week-col{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .2s;}
-.week-col.is-today{border-color:var(--accent);box-shadow:0 0 0 1px rgba(144,184,120,0.15);}
-.week-col.has-tasks{border-color:var(--border-bright);}
-.wc-head{padding:9px 10px 7px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:1px;}
-.week-col.is-today .wc-head{background:rgba(144,184,120,0.07);}
-.wc-day-row{display:flex;align-items:baseline;gap:5px;}
-.wc-name{font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);}
-.wc-num{font-family:'Playfair Display',serif;font-size:17px;color:var(--text-muted);line-height:1;}
-.week-col.is-today .wc-name,.week-col.is-today .wc-num{color:var(--accent);}
-.wc-weather{display:flex;align-items:center;gap:4px;margin-top:4px;flex-wrap:wrap;}
-.wc-icon{font-size:13px;line-height:1;}
-.wc-temps{font-size:10px;color:var(--text-muted);}
-.wc-rain{font-size:9px;padding:1px 5px;border-radius:3px;font-weight:600;}
-.wc-rain.ok{background:rgba(138,186,120,0.15);color:#7ab868;}
-.wc-rain.warn{background:rgba(200,168,96,0.2);color:#c8a858;}
-.wc-rain.bad{background:rgba(176,96,96,0.2);color:#b07070;}
-.wc-spray{height:2px;border-radius:1px;margin-top:5px;}
-.wc-spray.good{background:linear-gradient(90deg,#52944a,#8aba78);}
-.wc-spray.caution{background:linear-gradient(90deg,#b8a060,#d4c070);}
-.wc-spray.hold{background:rgba(176,96,96,0.5);}
-
-.week-tasks{padding:7px 6px;display:flex;flex-direction:column;gap:5px;flex:1;}
-.week-task{background:rgba(255,255,255,0.03);border-radius:6px;padding:5px 7px;display:flex;flex-direction:column;gap:3px;}
-.wt-top{display:flex;align-items:center;gap:6px;}
-.wt-dot{width:7px;height:7px;border-radius:2px;flex-shrink:0;}
-.wt-name{font-size:10px;font-weight:600;color:#a8c898;line-height:1.2;flex:1;}
-.wt-bottom{display:flex;align-items:center;justify-content:space-between;padding-left:13px;}
-.wt-setting{font-size:9px;color:var(--text-muted);}
-.log-btn{font-size:9px;font-weight:700;padding:2px 7px;border-radius:4px;border:none;cursor:pointer;letter-spacing:.04em;font-family:'DM Sans',sans-serif;transition:all .2s;}
-.log-btn.undone{background:rgba(144,184,120,0.15);color:#7ab868;}
-.log-btn.undone:hover{background:rgba(144,184,120,0.3);}
-.log-btn.done{background:rgba(82,148,74,0.25);color:#6ea860;}
-.week-empty{flex:1;display:flex;align-items:center;justify-content:center;padding:14px 8px;}
-.week-empty-text{font-size:10px;color:#3a5038;font-style:italic;text-align:center;}
+.week-product-list{display:flex;flex-direction:column;gap:8px;}
+.week-clear{padding:22px 24px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:13px;color:#4a6845;font-style:italic;}
+.week-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:16px;transition:border-color .2s;}
+.week-item:hover{border-color:var(--border-bright);}
+.week-item.logged{opacity:.6;}
+.wi-color{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.wi-name{font-size:14px;font-weight:600;color:#b8d4ac;flex:1;}
+.wi-meta{display:flex;align-items:center;gap:18px;flex-shrink:0;}
+.wi-type{font-size:11px;color:var(--text-muted);}
+.wi-setting{font-size:11px;color:var(--text-muted);}
+.wi-date{font-size:11px;color:var(--text-muted);}
+.log-btn{font-size:11px;font-weight:600;padding:5px 14px;border-radius:20px;border:none;cursor:pointer;letter-spacing:.04em;font-family:'DM Sans',sans-serif;transition:all .2s;white-space:nowrap;}
+.log-btn.undone{background:rgba(144,184,120,0.15);color:#7ab868;border:1px solid rgba(144,184,120,0.25);}
+.log-btn.undone:hover{background:rgba(144,184,120,0.28);}
+.log-btn.done{background:rgba(82,148,74,0.2);color:#6ea860;border:1px solid rgba(82,148,74,0.3);}
 
 .week-upcoming{margin-top:14px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
 .upcoming-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);white-space:nowrap;}
@@ -238,7 +218,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;fon
       <button class="print-btn" onclick="window.print()">🖨 Print Week</button>
     </div>
   </div>
-  <div class="week-grid" id="weekGrid"></div>
+  <div class="week-product-list" id="weekList"></div>
   <div class="week-upcoming">
     <div class="upcoming-label">Coming up →</div>
     <div class="upcoming-items" id="upcomingItems"></div>
@@ -354,6 +334,8 @@ function refreshLogBtns(){
     const logged=s.has(btn.dataset.k);
     btn.textContent=logged?'✓ Done':'Log it';
     btn.className='log-btn '+(logged?'done':'undone');
+    const item=btn.closest('.week-item');
+    if(item) item.classList.toggle('logged', logged);
   });
 }
 function updateProgress(){
@@ -410,51 +392,51 @@ function buildWeekSection(){
   document.getElementById('weekRange').textContent=
     `${MOS[sunday.getMonth()]} ${sunday.getDate()} – ${MOS[saturday.getMonth()]} ${saturday.getDate()}, ${saturday.getFullYear()}`;
 
-  const grid=document.getElementById('weekGrid'); grid.innerHTML='';
-  let taskDays=0;
-
+  // Collect all tasks for the week, deduped by product
+  const weekTasks=[]; // {code, date, m, d}
+  const seen=new Set();
   for(let i=0;i<7;i++){
     const day=new Date(sunday); day.setDate(sunday.getDate()+i);
-    const isToday=day.getTime()===today.getTime();
     const m=day.getMonth()+1, d=day.getDate();
     const tasks=(events[m]&&events[m][d])||[];
-    if(tasks.length)taskDays++;
+    tasks.forEach(code=>{
+      if(!seen.has(code)){
+        seen.add(code);
+        weekTasks.push({code, m, d, day:new Date(day)});
+      }
+    });
+  }
 
-    const wx=getWx(day);
-    const advice=wx?sprayAdvice(wx.code,wx.high,wx.rain):null;
+  const list=document.getElementById('weekList'); list.innerHTML='';
 
-    const col=document.createElement('div');
-    col.className='week-col'+(isToday?' is-today':'')+(tasks.length?' has-tasks':'');
-
-    // Head
-    let headHtml=`<div class="wc-day-row"><span class="wc-name">${DS[day.getDay()]}</span><span class="wc-num">${d}</span></div>`;
-    if(wx){
-      const rc=wx.rain>40?'bad':wx.rain>20?'warn':'ok';
-      headHtml+=`<div class="wc-weather"><span class="wc-icon">${wx.icon}</span><span class="wc-temps">${wx.high}°/${wx.low}°</span><span class="wc-rain ${rc}">${wx.rain}%</span></div><div class="wc-spray ${advice}" title="${{good:'Good to apply',caution:'Apply early AM – heat or rain possible',hold:'Hold off – poor conditions'}[advice]}"></div>`;
-    }
-    col.innerHTML=`<div class="wc-head">${headHtml}</div>`;
-
-    if(tasks.length){
-      const wrap=document.createElement('div'); wrap.className='week-tasks';
-      tasks.forEach(code=>{
-        const p=products[code], k=logKey(m,d,code), logged=getLogged().has(k);
-        const t=document.createElement('div'); t.className='week-task';
-        t.innerHTML=`<div class="wt-top"><div class="wt-dot" style="background:${p.color}"></div><div class="wt-name">${p.name}</div></div>
-          <div class="wt-bottom"><span class="wt-setting">⚙ ${p.setting}</span>
-          <button class="log-btn ${logged?'done':'undone'}" data-k="${k}" onclick="toggleLog(${m},${d},${code})">${logged?'✓ Done':'Log it'}</button></div>`;
-        wrap.appendChild(t);
-      });
-      col.appendChild(wrap);
-    } else {
-      col.innerHTML+=`<div class="week-empty"><div class="week-empty-text">${isToday?'Rest day 🌱':'—'}</div></div>`;
-    }
-    grid.appendChild(col);
+  if(weekTasks.length===0){
+    list.innerHTML='<div class="week-clear">🌱 Nothing to apply this week — enjoy the rest!</div>';
+  } else {
+    weekTasks.forEach(({code,m,d,day})=>{
+      const p=products[code], k=logKey(m,d,code), logged=getLogged().has(k);
+      const isToday=day.getTime()===today.getTime();
+      const dayLabel=isToday?'Today':DS[day.getDay()]+' '+MOS[day.getMonth()]+' '+d;
+      const item=document.createElement('div');
+      item.className='week-item'+(logged?' logged':'');
+      item.id=`wi-${k}`;
+      item.innerHTML=`
+        <div class="wi-color" style="background:${p.color}"></div>
+        <div class="wi-name">${p.name}</div>
+        <div class="wi-meta">
+          <span class="wi-type">${p.type}</span>
+          <span class="wi-setting">⚙ Setting ${p.setting}</span>
+          <span class="wi-date">📅 ${dayLabel}</span>
+          <button class="log-btn ${logged?'done':'undone'}" data-k="${k}"
+            onclick="toggleLog(${m},${d},${code})">${logged?'✓ Done':'Log it'}</button>
+        </div>`;
+      list.appendChild(item);
+    });
   }
 
   // Pill
   const pill=document.getElementById('weekPill');
-  if(taskDays>=3){pill.textContent=`${taskDays} application days`;pill.className='week-pill busy';}
-  else if(taskDays>0){pill.textContent=`${taskDays} application day${taskDays>1?'s':''}`;pill.className='week-pill light';}
+  if(weekTasks.length>=3){pill.textContent=`${weekTasks.length} products this week`;pill.className='week-pill busy';}
+  else if(weekTasks.length>0){pill.textContent=`${weekTasks.length} product${weekTasks.length>1?'s':''} this week`;pill.className='week-pill light';}
   else{pill.textContent='Clear week';pill.className='week-pill clear';}
 
   // Upcoming
